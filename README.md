@@ -1,5 +1,3 @@
-[![MIT License][license-badge]][LICENSE]
-
 # Event management app
 
 App that allows users to sign up, post and view different events.

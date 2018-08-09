@@ -1,8 +1,8 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import './Register.css'
+import './Signup.css'
 
-class Register extends React.Component {
+class Signup extends React.Component {
   
   constructor(props) {
     super(props);
@@ -24,6 +24,10 @@ class Register extends React.Component {
                 <form role="form" id="loginForm">
                   <fieldset>
                     <div className="form-group">
+                      <input className="form-control" placeholder="Name" name="text" type="text" id="textField"
+                             autoFocus/>
+                    </div>
+                    <div className="form-group">
                       <input className="form-control" placeholder="Email" name="email" type="email" id="emailField"
                              autoFocus/>
                     </div>
@@ -33,7 +37,7 @@ class Register extends React.Component {
                     </div>
                 
                     
-                    <a id="loginButton" className="btn btn-lg btn-success btn-block">Register
+                    <a id="loginButton" className="btn btn-lg btn-success btn-block">Signup
                       <img id="loadingSpinner"
                            src="http://www.nasa.gov/multimedia/videogallery/ajax-loader.gif" width="28" height="28"/>
                     </a>
@@ -47,4 +51,4 @@ class Register extends React.Component {
     );
   }
 }
-export default Login;
+export default Signup;

@@ -47,9 +47,12 @@ class Navbar extends React.Component {
                 }
                 { !this.state.isUserLogged &&
                 <li>
+                  <Link to='/signup'>Sign up</Link>
+                </li> }
+                { !this.state.isUserLogged &&
+                <li>
                   <Link to='/login'>Login</Link>
-                </li>
-                }
+                </li> }
               </ul>
             </div>
           </div>

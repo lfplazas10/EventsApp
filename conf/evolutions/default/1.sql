@@ -4,12 +4,10 @@
 # --- !Ups
 
 create table users (
-  id                            bigserial not null,
-  name                          varchar(255),
+  email                         varchar(255) not null,
   salt                          varchar(255),
   hash                          varchar(255),
-  email                         varchar(255),
-  constraint pk_users primary key (id)
+  constraint pk_users primary key (email)
 );
 
 

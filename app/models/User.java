@@ -4,18 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.hash.Hashing;
 import io.ebean.Finder;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import io.ebean.Model;
+import javax.persistence.*;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.SecureRandom;
 
 @Entity
 @Table(name = "USERS")
-public class User extends BaseModel {
+public class User extends Model {
 
     @JsonInclude()
     @Transient
@@ -24,13 +20,8 @@ public class User extends BaseModel {
     @JsonIgnore
     private String salt, hash;
 
+    @Id
     private String email;
-
-    public User(String name, String password, String email) throws Exception {
-        this.name = name;
-        this.email = email;
-        this.hashAndSavePassword(password);
-    }
 
     public static Finder<Long, User> find() {
         return new Finder<Long, User>(User.class);
@@ -68,19 +59,24 @@ public class User extends BaseModel {
         this.password = password;
     }
 
-    private void hashAndSavePassword(String password) throws Exception{
+    public void hashAndSavePassword() throws Exception{
         byte[] salt = SecureRandom.getInstance("SHA1PRNG").generateSeed(20);
+        this.salt = salt.toString();
+        System.out.println("salt c: "+this.salt);
         String sha512hex = Hashing.sha512()
-                .hashString(salt.toString()+password, StandardCharsets.UTF_8)
+                .hashString(this.salt+this.password, StandardCharsets.UTF_8)
                 .toString();
         this.hash = sha512hex;
-        this.salt = salt.toString();
+        this.password = null;
     }
 
-    private boolean isPasswordCorrect(User user, String password){
+    public static boolean isPasswordCorrect(User user, String password){
+        System.out.println("salt v: "+user.salt);
         String sha512hex = Hashing.sha512()
                 .hashString(user.salt+password, StandardCharsets.UTF_8)
                 .toString();
+        System.out.println(sha512hex);
+        System.out.println(user.hash);
         return sha512hex.equals(user.hash);
     }
 

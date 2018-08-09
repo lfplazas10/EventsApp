@@ -21,4 +21,8 @@ public class BaseController extends Controller {
         return object == null ? ok() : ok(Json.prettyPrint(Json.toJson(object))).as(CONTENT_TYPE);
     }
 
+    protected static Result error(String message) {
+        return internalServerError(Json.parse("{\"error\":\""+message+"\"}"));
+    }
+
 }

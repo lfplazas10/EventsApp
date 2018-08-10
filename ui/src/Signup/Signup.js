@@ -7,8 +7,17 @@ class Signup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isUserLogged: false
+      isUserLogged  : false,
+      processing    : false
     };
+    this.submit = this.submit.bind(this);
+  }
+  
+  submit(e){
+    e.preventDefault();
+    this.setState({processing:true}, () => {
+      axios
+    })
   }
   
   render(){
@@ -21,27 +30,33 @@ class Signup extends React.Component {
                 <h3 className="panel-title">Register in our platform</h3>
               </div>
               <div className="panel-body">
-                <form role="form" id="loginForm">
-                  <fieldset>
+                <form role="form" id="loginForm" onSubmit={this.submit}>
                     <div className="form-group">
-                      <input className="form-control" placeholder="Name" name="text" type="text" id="textField"
+                      <input className="form-control" onChange={(e) => this.setState({email: e.target.value}) }
+                             value={this.state.email}
+                             placeholder="Email" name="email" type="email" id="emailField"
+                             required
                              autoFocus/>
                     </div>
                     <div className="form-group">
-                      <input className="form-control" placeholder="Email" name="email" type="email" id="emailField"
-                             autoFocus/>
-                    </div>
-                    <div className="form-group">
-                      <input className="form-control" placeholder="Password" name="password" type="password"
-                             id="passwordField" value=""/>
+                      <input className="form-control" onChange={(e) => this.setState({password: e.target.value}) }
+                             value={this.state.password}
+                             placeholder="Password" name="password" type="password"
+                             required
+                             id="passwordField"/>
                     </div>
                 
                     
-                    <a id="loginButton" className="btn btn-lg btn-success btn-block">Signup
-                      <img id="loadingSpinner"
-                           src="http://www.nasa.gov/multimedia/videogallery/ajax-loader.gif" width="28" height="28"/>
-                    </a>
-                  </fieldset>
+                    <button id="signupButton" type="submit"
+                            disabled={this.state.processing}
+                       className="btn btn-lg btn-success btn-block">
+                      { this.state.processing ?
+                        <img id="loadingSpinner"
+                             src="http://www.nasa.gov/multimedia/videogallery/ajax-loader.gif" width="28" height="28"/>
+                        :
+                        <span>Signup</span>
+                      }
+                    </button>
                 </form>
               </div>
             </div>

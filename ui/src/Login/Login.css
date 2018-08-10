@@ -1,7 +1,3 @@
 #loginContainer{
   margin-top: calc(40% - 300px);
 }
-#loadingSpinner{
-  textAlign: center;
-  display: none;
-}

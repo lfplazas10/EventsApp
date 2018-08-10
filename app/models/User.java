@@ -62,7 +62,6 @@ public class User extends Model {
     public void hashAndSavePassword() throws Exception{
         byte[] salt = SecureRandom.getInstance("SHA1PRNG").generateSeed(20);
         this.salt = salt.toString();
-        System.out.println("salt c: "+this.salt);
         String sha512hex = Hashing.sha512()
                 .hashString(this.salt+this.password, StandardCharsets.UTF_8)
                 .toString();
@@ -71,12 +70,9 @@ public class User extends Model {
     }
 
     public static boolean isPasswordCorrect(User user, String password){
-        System.out.println("salt v: "+user.salt);
         String sha512hex = Hashing.sha512()
                 .hashString(user.salt+password, StandardCharsets.UTF_8)
                 .toString();
-        System.out.println(sha512hex);
-        System.out.println(user.hash);
         return sha512hex.equals(user.hash);
     }
 

@@ -5,11 +5,17 @@ import models.Event;
 import models.User;
 import play.mvc.Result;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+
 public class EventController extends BaseController {
 
     public Result createEvent() {
         try {
+            String user = session("connected");
             Event event = bodyAs(Event.class);
+            event.setOwnerEmail(user);
             event.save();
             return ok(event);
         } catch (Exception e){
@@ -19,7 +25,8 @@ public class EventController extends BaseController {
 
     public Result getEvents() {
         try {
-            return ok(User.find().all());
+            String user = session("connected");
+            return ok(Event.find().query().where().eq("email", user));
         } catch (Exception e){
             e.printStackTrace();
             return error(e.getMessage());

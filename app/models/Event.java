@@ -5,6 +5,7 @@ import io.ebean.Finder;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
 @Table(name = "EVENTS")
@@ -18,12 +19,20 @@ public class Event extends BaseModel{
     }
 
     private Category category;
-    private String place, address;
-    private Timestamp startDate, endDate;
+    private String ownerEmail, place, address;
+    private Instant startDate, endDate;
     private boolean virtual;
 
     public static Finder<Long, Event> find() {
         return new Finder<Long, Event>(Event.class);
+    }
+
+    public String getOwnerEmail() {
+        return ownerEmail;
+    }
+
+    public void setOwnerEmail(String ownerEmail) {
+        this.ownerEmail = ownerEmail;
     }
 
     public Category getCategory() {
@@ -50,19 +59,19 @@ public class Event extends BaseModel{
         this.address = address;
     }
 
-    public Timestamp getStartDate() {
+    public Instant getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Timestamp startDate) {
+    public void setStartDate(Instant startDate) {
         this.startDate = startDate;
     }
 
-    public Timestamp getEndDate() {
+    public Instant getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Timestamp endDate) {
+    public void setEndDate(Instant endDate) {
         this.endDate = endDate;
     }
 

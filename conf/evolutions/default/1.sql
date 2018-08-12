@@ -7,6 +7,7 @@ create table events (
   id                            bigserial not null,
   name                          varchar(255),
   category                      integer,
+  owner_email                   varchar(255),
   place                         varchar(255),
   address                       varchar(255),
   start_date                    timestamptz,

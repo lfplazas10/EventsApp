@@ -1,0 +1,10 @@
+.sameLineModal{
+    display: inline;
+}
+.modalCloseButton{
+    right: 0px;
+}
+.cb{
+    margin-left: 10px !important;
+    width: 40px;
+}

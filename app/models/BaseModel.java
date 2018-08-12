@@ -1,5 +1,6 @@
 package models;
 
+import io.ebean.Finder;
 import io.ebean.Model;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -26,4 +27,5 @@ public abstract class BaseModel extends Model {
     public void setName(String name) {
         this.name = name;
     }
+
 }

@@ -14,5 +14,7 @@ POST    /api/login                      controllers.UserController.login()
 
 POST    /api/event                      controllers.EventController.createEvent()
 
+POST    /api/test                       controllers.UserController.test()
+
 # Serve static assets under public directory
 GET     /*file                      controllers.FrontendController.assetOrDefault(file)

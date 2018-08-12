@@ -32,6 +32,18 @@ public class UserController extends BaseController {
         }
     }
 
+    public Result test() {
+        try {
+            JsonNode request = request().body().asJson();
+            String email = request.get("email").asText();
+            String user = session(email);
+            return ok(user);
+        } catch (Exception e){
+            e.printStackTrace();
+            return error(e.getMessage());
+        }
+    }
+
     public Result login() {
         try {
             JsonNode request = request().body().asJson();
@@ -44,6 +56,7 @@ public class UserController extends BaseController {
             if (!user.isPasswordCorrect(user, password)){
                 throw new Exception("The password is incorrect");
             }
+            session(email, "connected");
             return ok(user);
         } catch (Exception e){
             return error(e.getMessage());

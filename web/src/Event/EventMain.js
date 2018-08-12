@@ -6,46 +6,8 @@ import { DateRangePicker, } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import './Events.css'
 import axios from 'axios';
-import {isUserLogged} from '../Auth.js'
-
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : '500px',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
-const columns = [{
-  Header: 'Name',
-  accessor: 'name' // String-based value accessors!
-}, {
-  Header: 'Category',
-  accessor: 'category',
-  Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
-},{
-  Header: 'Place',
-  accessor: 'place',
-  Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
-},{
-  Header: 'Address',
-  accessor: 'address',
-  Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
-},{
-  id: 'dates',
-  Header: 'Dates',
-  accessor: d => new Date(d.startDate*1000).toLocaleString().split(',')[0]+' - '+ new Date(d.endDate*1000).toLocaleString().split(',')[0],
-  Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
-}, {
-  Header: 'Virtual',
-  accessor: 'virtual',
-  Cell: props => <span className='number'>{props.value? 'True' : 'False'}</span> // Custom cell components!
-},{
-  Header: 'Actions',
-  Cell: props => <span className='number'><button>EDIT</button><button>DELETE</button></span> // Custom cell components!
-}];
+import SweetAlert from 'react-bootstrap-sweetalert';
+import { isUserLogged } from '../Auth.js'
 
 class EventMain extends React.Component {
   constructor(props) {
@@ -59,14 +21,21 @@ class EventMain extends React.Component {
       virtual     : false,
       startDate   : undefined,
       endDate     : undefined,
-      modal       : true,
+      modal       : false,
       email       : '',
       password    : '',
       processing  : false
     };
-    this.handleInputChange   = this.handleInputChange.bind(this);
-    this.submit              = this.submit.bind(this);
-    this.getUserEvents       = this.getUserEvents.bind(this);
+    this.handleInputChange      = this.handleInputChange.bind(this);
+    this.submit                 = this.submit.bind(this);
+    this.getUserEvents          = this.getUserEvents.bind(this);
+    this.deleteEvent            = this.deleteEvent.bind(this);
+    this.showDeleteConfirmation = this.showDeleteConfirmation.bind(this);
+    this.hideAlert              = this.hideAlert.bind(this);
+  }
+  
+  hideAlert() {
+    this.setState({ alert: null });
   }
   
   componentDidMount(){
@@ -82,13 +51,23 @@ class EventMain extends React.Component {
     this.setState({modal: true});
   }
   
-  afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    // this.subtitle.style.color = '#f00';
-  }
-  
   closeModal() {
     this.setState({modal: false});
+  }
+  
+  showError(message){
+    this.setState({ alert:
+        <SweetAlert
+          error
+          confirmBtnText="Ok"
+          confirmBtnBsStyle="danger"
+          title="Error"
+          onConfirm={this.hideAlert}
+          onCancel={this.hideAlert}
+        >
+          {'Message: '+message}
+        </SweetAlert>
+    });
   }
   
   handleInputChange(event) {
@@ -109,6 +88,33 @@ class EventMain extends React.Component {
       });
   }
   
+  deleteEvent(event){
+    axios.delete('/api/event/'+event)
+      .then((response) => {
+        this.setState({alert : null});
+        this.getUserEvents();
+      })
+      .catch((error) => {
+        this.showError(error.response && error.response.data ? error.response.data.error : error);
+        this.setState({alert : null});
+      });
+  }
+  
+  showDeleteConfirmation(event){
+    this.setState({ alert: <SweetAlert
+        warning
+        showCancel
+        confirmBtnText="Yes, delete it!"
+        confirmBtnBsStyle="danger"
+        cancelBtnBsStyle="default"
+        title="Are you sure?"
+        onConfirm={() => this.deleteEvent(event)}
+        onCancel={this.hideAlert}
+      >
+        This will delete the event.
+      </SweetAlert>})
+  }
+  
   submit(e){
     e.preventDefault();
     let event = Object.assign({}, this.state);
@@ -121,7 +127,15 @@ class EventMain extends React.Component {
     this.setState({processing : true}, () => {
       axios.post('/api/event', event)
         .then((response) => {
-          this.setState({processing : false, modal : false});
+          this.setState({processing : false, modal : false,
+            category    : 'Conference',
+            name        : '',
+            place       : '',
+            address     : '',
+            virtual     : false,
+            startDate   : undefined,
+            endDate     : undefined
+          });
           this.getUserEvents();
         })
         .catch((error) => {
@@ -132,21 +146,61 @@ class EventMain extends React.Component {
   }
   
   render(){
-    console.log(this.state.virtual)
     return(
-      <div>
-        <ReactTable
-          data={this.state.data}
-          columns={columns}
-          defaultPageSize={20}
-          style={{
-            height: "400px" // This will force the table body to overflow and scroll, since there is not enough room
-          }}
-          className="-striped -highlight"
-        />
+      <div className='containerEvents'>
+          <button className='' onClick={()=>this.setState({modal:true})}>
+            Create new event
+          </button>
+        <div >
+          <ReactTable
+            data={this.state.data}
+            columns={[{
+              Header: 'Name',
+              accessor: 'name'
+            }, {
+              Header: 'Category',
+              accessor: 'category',
+              minWidth: 110,
+              maxWidth: 110,
+              Cell: props => <div className='numberCe'>{props.value}</div>
+            },{
+              Header: 'Place',
+              accessor: 'place',
+              Cell: props => <div className='numberCe'>{props.value}</div> // Custom cell components!
+            },{
+              Header: 'Address',
+              accessor: 'address',
+              Cell: props => <div className='numberCe'>{props.value}</div> // Custom cell components!
+            },{
+              id: 'dates',
+              Header: 'Dates',
+              minWidth: 170,
+              maxWidth: 170,
+              accessor: d => new Date(d.startDate*1000).toLocaleString().split(',')[0]+' - '+ new Date(d.endDate*1000).toLocaleString().split(',')[0],
+              Cell: props => <div className='numberCe'>{props.value}</div> // Custom cell components!
+            }, {
+              Header: 'Virtual',
+              accessor: 'virtual',
+              minWidth: 70,
+              maxWidth: 70,
+              Cell: props => <div className='numberCe'>{props.value? 'True' : 'False'}</div> // Custom cell components!
+            },{
+              id: 'actions',
+              Header: 'Actions',
+              minWidth: 132,
+              maxWidth: 132,
+              accessor: d => d.id,
+              Cell: props => <div><button className='edButton'>EDIT</button><button className='deButton' onClick={() => this.showDeleteConfirmation(props.value)}>DELETE</button>{this.state.alert}</div>
+            }]}
+            defaultPageSize={10}
+            style={{
+              height: "100%" // This will force the table body to overflow and scroll, since there is not enough room
+            }}
+            className="-striped -highlight"
+          />
+        </div>
         <Modal
           isOpen={this.state.modal}
-          onAfterOpen={this.afterOpenModal}
           onRequestClose={()=>this.setState({modal: false})}
           style={customStyles}
           contentLabel="Example Modal"
@@ -225,5 +279,16 @@ class EventMain extends React.Component {
     )
   }
 }
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : '500px',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
 
 export default EventMain;

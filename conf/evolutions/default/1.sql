@@ -10,6 +10,7 @@ create table events (
   owner_email                   varchar(255),
   place                         varchar(255),
   address                       varchar(255),
+  creation_date                 timestamptz,
   start_date                    timestamptz,
   end_date                      timestamptz,
   virtual                       boolean default false not null,

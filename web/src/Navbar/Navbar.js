@@ -1,6 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import './Navbar.css'
+import {logOutUser} from '../Auth.js'
 import {isUserLogged} from '../Auth.js'
 
 class Navbar extends React.Component {
@@ -32,6 +33,11 @@ class Navbar extends React.Component {
                 { this.state.isUserLogged &&
                 <li data-toggle="collapse" data-target=".nav-collapse.show">
                   <Link to='/events'>Events</Link>
+                </li>
+                }
+                { this.state.isUserLogged &&
+                <li data-toggle="collapse" data-target=".nav-collapse.show" onClick={()=>logOutUser()}>
+                  <Link to='/login'>Logout</Link>
                 </li>
                 }
                 { !this.state.isUserLogged &&

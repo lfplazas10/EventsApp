@@ -2,18 +2,16 @@ package controllers;
 
 import controllers.base.BaseController;
 import models.Event;
-import models.User;
 import play.mvc.Result;
-
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
 
 public class EventController extends BaseController {
 
     public Result createEvent() {
         try {
             String user = session("connected");
+            if (user == null)
+                return unauthorized();
+
             Event event = bodyAs(Event.class);
             event.setOwnerEmail(user);
             event.save();
@@ -23,10 +21,25 @@ public class EventController extends BaseController {
         }
     }
 
+    public Result deleteEvent(Long eventId) {
+        try {
+            String user = session("connected");
+            if (user == null)
+                return unauthorized();
+            if (!Event.find().byId(eventId).getOwnerEmail().equals(user))
+                throw new Exception("The user does not own the event");
+
+            Event.find().deleteById(eventId);
+            return ok(eventId);
+        } catch (Exception e){
+            return error(e.getMessage());
+        }
+    }
+
     public Result getEvents() {
         try {
             String user = session("connected");
-            return ok(Event.find().query().where().eq("owner_email", user).findList());
+            return ok(Event.find().query().where().eq("owner_email", user).orderBy("creation_date desc").findList());
         } catch (Exception e){
             e.printStackTrace();
             return error(e.getMessage());

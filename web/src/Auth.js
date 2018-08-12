@@ -8,3 +8,7 @@ export function isUserLogged(){
   else
     return false;
 };
+
+export function logOutUser(){
+  let session = cookie.remove('PLAY_SESSION');
+};

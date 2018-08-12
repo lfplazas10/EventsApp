@@ -18,9 +18,13 @@ public class Event extends BaseModel{
         Class
     }
 
+    public Event(){
+        this.creationDate = Instant.now();
+    }
+
     private Category category;
     private String ownerEmail, place, address;
-    private Instant startDate, endDate;
+    private Instant creationDate, startDate, endDate;
     private boolean virtual;
 
     public static Finder<Long, Event> find() {
@@ -81,5 +85,13 @@ public class Event extends BaseModel{
 
     public void setVirtual(boolean virtual) {
         this.virtual = virtual;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 }

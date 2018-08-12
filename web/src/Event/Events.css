@@ -8,3 +8,21 @@
     margin-left: 10px !important;
     width: 40px;
 }
+.notSameLine{
+    display: block;
+    white-space:normal !important;
+}
+.centerDiv{
+    /*text-align: center;*/
+}
+.edButton{
+ margin-left: 0px;
+}
+.containerEvents{
+    margin-left: 5px;
+    margin-right: 5px !important;
+}
+.numberCe{
+    width: 100% !important;
+    text-align: center!important;
+}

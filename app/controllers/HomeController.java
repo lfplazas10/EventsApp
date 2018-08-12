@@ -10,6 +10,11 @@ public class HomeController extends BaseController {
     public Result createUser() {
         try {
             User user = bodyAs(User.class);
+            boolean exists = User.find().query().where()
+                    .eq("email", user.getEmail()).findOne() != null;
+            if (exists){
+                throw new Exception("There is already an user with that email");
+            }
             user.hashAndSavePassword();
             user.save();
             return ok(user);

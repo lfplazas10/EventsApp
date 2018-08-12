@@ -1,4 +1,4 @@
-name := """java-play-react-seed"""
+name := """server-manager"""
 
 version := "1.0-SNAPSHOT"
 

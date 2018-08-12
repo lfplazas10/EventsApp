@@ -1,5 +1,5 @@
 {
-  "name": "java-play-react-seed",
+  "name": "server-manager",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -10,8 +10,8 @@
   },
   "proxy": "http://localhost:9000",
   "dependencies": {
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "axios": "^0.18.0",
+    "react-bootstrap-sweetalert": "^4.4.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^1.1.4"
   },

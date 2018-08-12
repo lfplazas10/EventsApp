@@ -29,28 +29,29 @@ class Navbar extends React.Component {
               <ul className="nav navbar-nav navbar-right">
                 {/*Menu options dropdown*/}
                 { this.state.isUserLogged &&
-                <li role="presentation" className="dropdown">
+                <li role="presentation" data-toggle="collapse" data-target=".nav-collapse.show"
+                    className="dropdown">
                   <a className="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                      aria-haspopup="true" aria-expanded="false">
                     What do you want to do today?
                     <span className="caret"></span>
                   </a>
                   <ul className="dropdown-menu">
-                    <li className="nav-item">
+                    <li className="nav-item" data-toggle="collapse" data-target=".nav-collapse.show">
                       <a onClick={() => null}>View events</a>
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item" data-toggle="collapse" data-target=".nav-collapse.show">
                       <a onClick={() => null}>Create event</a>
                     </li>
                   </ul>
                 </li>
                 }
                 { !this.state.isUserLogged &&
-                <li>
+                <li data-toggle="collapse" data-target=".nav-collapse.show">
                   <Link to='/signup'>Sign up</Link>
                 </li> }
                 { !this.state.isUserLogged &&
-                <li>
+                <li data-toggle="collapse" data-target=".nav-collapse.in">
                   <Link to='/login'>Login</Link>
                 </li> }
               </ul>

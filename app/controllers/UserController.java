@@ -5,7 +5,7 @@ import controllers.base.BaseController;
 import models.User;
 import play.mvc.*;
 
-public class HomeController extends BaseController {
+public class UserController extends BaseController {
 
     public Result createUser() {
         try {

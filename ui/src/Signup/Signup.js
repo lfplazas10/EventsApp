@@ -10,7 +10,6 @@ class Signup extends React.Component {
     super(props);
     this.state = {
       alert           : null,
-      isUserLogged    : false,
       processing      : false,
       redirect        : false,
       email           : '',

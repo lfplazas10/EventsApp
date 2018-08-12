@@ -4,7 +4,7 @@ import axios from "axios/index";
 import { Redirect } from 'react-router'
 import SweetAlert from 'react-bootstrap-sweetalert';
 
-class Login extends React.Component {
+class EventList extends React.Component {
   
   constructor(props) {
     super(props);
@@ -101,4 +101,4 @@ class Login extends React.Component {
     );
   }
 }
-export default Login;
+export default EventList;

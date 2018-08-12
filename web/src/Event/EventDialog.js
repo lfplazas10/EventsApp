@@ -2,6 +2,7 @@ import React from "react";
 import Modal from 'react-modal';
 import { DateRangePicker, } from 'react-dates';
 import axios from "axios/index";
+import moment from 'moment';
 
 class EventDialog extends React.Component{
   
@@ -25,8 +26,8 @@ class EventDialog extends React.Component{
       this.state.place       = this.props.event.place;
       this.state.address     = this.props.event.address;
       this.state.virtual     = this.props.event.virtual;
-      // this.state.startDate   = this.props.event.startDate;
-      // this.state.endDate     = this.props.event.endDate;
+      this.state.startDate   = moment(this.props.event.startDate*1000);
+      this.state.endDate     = moment(this.props.event.endDate*1000);
       this.state.processing  = this.props.event.processing;
     }
     this.handleInputChange      = this.handleInputChange.bind(this);

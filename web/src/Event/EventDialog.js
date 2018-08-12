@@ -47,8 +47,9 @@ class EventDialog extends React.Component{
   edit(e){
     e.preventDefault();
     let event = Object.assign({}, this.state);
+    event.id = this.props.event.id;
     this.setState({processing : true}, () => {
-      axios.post('/api/event', event)
+      axios.put('/api/event', event)
         .then((response) => {
           this.setState({
             processing : false,

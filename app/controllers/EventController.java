@@ -34,7 +34,8 @@ public class EventController extends BaseController {
             Event event = bodyAs(Event.class);
             if (!Event.find().byId(event.getId()).getOwnerEmail().equals(user))
                 throw new Exception("The user does not own the event");
-            event.save();
+            
+            event.update();
             return ok(event);
         } catch (Exception e){
             return error(e.getMessage());

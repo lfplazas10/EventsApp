@@ -13,7 +13,7 @@ POST    /api/login                      controllers.UserController.login()
 # Event endpoints
 GET     /api/event                      controllers.EventController.getEvents()
 POST    /api/event                      controllers.EventController.createEvent()
-PUT     /api/event                      controllers.EventController.createEvent()
+PUT     /api/event                      controllers.EventController.updateEvent()
 DELETE  /api/event/:id                  controllers.EventController.deleteEvent(id:Long)
 
 GET    /api/test                       controllers.UserController.test()

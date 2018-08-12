@@ -1,53 +1,61 @@
 import './Signup.css';
 import axios from 'axios';
 import React from 'react';
-import { Redirect } from 'react-router'
+import {Redirect} from 'react-router'
 import SweetAlert from 'react-bootstrap-sweetalert';
+import {isUserLogged} from "../Auth";
 
 class Signup extends React.Component {
   
   constructor(props) {
     super(props);
     this.state = {
-      alert           : null,
-      processing      : false,
-      redirect        : false,
-      email           : '',
-      password        : ''
+      alert: null,
+      processing: false,
+      redirect: false,
+      email: '',
+      password: ''
     };
-    this.submit       = this.submit.bind(this);
-    this.hideAlert    = this.hideAlert.bind(this);
-    this.showError    = this.showError.bind(this);
-    this.showSuccess  = this.showSuccess.bind(this);
+    this.submit = this.submit.bind(this);
+    this.hideAlert = this.hideAlert.bind(this);
+    this.showError = this.showError.bind(this);
+    this.showSuccess = this.showSuccess.bind(this);
   }
   
-  showSuccess(message){
-    this.setState({ alert:
+  componentDidMount() {
+    if (isUserLogged())
+      this.props.history.push('/events')
+  }
+  
+  showSuccess(message) {
+    this.setState({
+      alert:
         <SweetAlert
           success
           confirmBtnText="Login"
           confirmBtnBsStyle="success"
           title="Success"
-          onConfirm={() => this.setState({ redirect: true})}
+          onConfirm={() => this.setState({redirect: true})}
           onCancel={this.hideAlert}
         >
-          {'Message: '+message}
+          {'Message: ' + message}
         </SweetAlert>
     });
   }
   
-  showError(message){
-    this.setState({ alert:
-      <SweetAlert
-        error
-        confirmBtnText="Ok"
-        confirmBtnBsStyle="danger"
-        title="Error"
-        onConfirm={this.hideAlert}
-        onCancel={this.hideAlert}
-      >
-        {'Message: '+message}
-      </SweetAlert>
+  showError(message) {
+    this.setState({
+      alert:
+        <SweetAlert
+          error
+          confirmBtnText="Ok"
+          confirmBtnBsStyle="danger"
+          title="Error"
+          onConfirm={this.hideAlert}
+          onCancel={this.hideAlert}
+        >
+          {'Message: ' + message}
+        </SweetAlert>
     });
   }
   
@@ -57,26 +65,26 @@ class Signup extends React.Component {
     });
   }
   
-  submit(e){
+  submit(e) {
     e.preventDefault();
-    this.setState({processing : true}, () => {
+    this.setState({processing: true}, () => {
       axios.post('/api/user', {
-        email     : this.state.email,
-        password  : this.state.password
+        email: this.state.email,
+        password: this.state.password
       })
         .then((response) => {
           this.showSuccess('User created, you can now login');
-          this.setState({processing : false});
+          this.setState({processing: false});
         })
         .catch((error) => {
-          this.showError(error.response.data.error);
-          this.setState({processing : false});
+          this.showError(error.response && error.response.data ? error.response.data.error : error);
+          this.setState({processing: false});
         });
     })
   }
   
-  render(){
-    return(
+  render() {
+    return (
       <div className="container" id="loginContainer">
         {this.state.redirect &&
         <Redirect to='/login'/>}
@@ -88,40 +96,41 @@ class Signup extends React.Component {
               </div>
               <div className="panel-body">
                 <form role="form" id="loginForm" onSubmit={this.submit}>
-                    <div className="form-group">
-                      <input className="form-control" onChange={(e) => this.setState({email: e.target.value}) }
-                             value={this.state.email}
-                             placeholder="Email" name="email" type="email" id="emailField"
-                             required
-                             autoFocus/>
-                    </div>
-                    <div className="form-group">
-                      <input className="form-control" onChange={(e) => this.setState({password: e.target.value}) }
-                             value={this.state.password}
-                             placeholder="Password" name="password" type="password"
-                             required
-                             id="passwordField"/>
-                    </div>
-                
-                    
-                    <button id="signupButton" type="submit"
-                            disabled={this.state.processing}
-                       className="btn btn-lg btn-success btn-block">
-                      { this.state.processing ?
-                        <img id="loadingSpinner"
-                             src="http://www.nasa.gov/multimedia/videogallery/ajax-loader.gif" width="28" height="28"/>
-                        :
-                        <span>Signup</span>
-                      }
-                    </button>
+                  <div className="form-group">
+                    <input className="form-control" onChange={(e) => this.setState({email: e.target.value})}
+                           value={this.state.email}
+                           placeholder="Email" name="email" type="email" id="emailField"
+                           required
+                           autoFocus/>
+                  </div>
+                  <div className="form-group">
+                    <input className="form-control" onChange={(e) => this.setState({password: e.target.value})}
+                           value={this.state.password}
+                           placeholder="Password" name="password" type="password"
+                           required
+                           id="passwordField"/>
+                  </div>
+                  
+                  
+                  <button id="signupButton" type="submit"
+                          disabled={this.state.processing}
+                          className="btn btn-lg btn-success btn-block">
+                    {this.state.processing ?
+                      <img id="loadingSpinner"
+                           src="http://www.nasa.gov/multimedia/videogallery/ajax-loader.gif" width="28" height="28"/>
+                      :
+                      <span>Signup</span>
+                    }
+                  </button>
                 </form>
               </div>
             </div>
           </div>
         </div>
-        { this.state.alert }
+        {this.state.alert}
       </div>
     );
   }
 }
+
 export default Signup;

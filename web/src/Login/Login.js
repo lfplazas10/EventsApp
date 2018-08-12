@@ -3,6 +3,7 @@ import './Login.css'
 import axios from "axios/index";
 import { Redirect } from 'react-router'
 import SweetAlert from 'react-bootstrap-sweetalert';
+import {isUserLogged} from '../Auth.js'
 
 class Login extends React.Component {
   
@@ -18,6 +19,11 @@ class Login extends React.Component {
     this.showError    = this.showError.bind(this);
   }
   
+  componentDidMount(){
+   if (isUserLogged())
+     this.props.history.push('/events')
+  }
+  
   submit(e){
     e.preventDefault();
     this.setState({processing : true}, () => {
@@ -26,11 +32,11 @@ class Login extends React.Component {
         password  : this.state.password
       })
         .then((response) => {
-          alert('good');
+          window.location.reload();
           this.setState({processing : false});
         })
         .catch((error) => {
-          this.showError(error.response.data.error);
+          this.showError(error.response && error.response.data ? error.response.data.error : error);
           this.setState({processing : false});
         });
     })

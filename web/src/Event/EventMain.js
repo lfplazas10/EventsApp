@@ -36,34 +36,22 @@ const columns = [{
 },{
   id: 'dates',
   Header: 'Dates',
-  accessor: d => d.dates.startDate +' - '+ d.dates.endDate,
+  accessor: d => new Date(d.startDate*1000).toLocaleString().split(',')[0]+' - '+ new Date(d.endDate*1000).toLocaleString().split(',')[0],
   Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
 }, {
   Header: 'Virtual',
-  accessor: 'age',
-  Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
+  accessor: 'virtual',
+  Cell: props => <span className='number'>{props.value? 'True' : 'False'}</span> // Custom cell components!
 },{
   Header: 'Actions',
   Cell: props => <span className='number'><button>EDIT</button><button>DELETE</button></span> // Custom cell components!
 }];
 
-const data = [{
-  name: 'Tanner Linsley',
-  age: 26,
-  friend: {
-    name: 'Jason Maurer',
-    age: 23,
-  },
-  dates: {
-    startDate: '1',
-    endDate: '2'
-  }
-}]
-
 class EventMain extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      data        : [{name:'d'}],
       category    : 'Conference',
       name        : '',
       place       : '',
@@ -78,7 +66,11 @@ class EventMain extends React.Component {
     };
     this.handleInputChange   = this.handleInputChange.bind(this);
     this.submit              = this.submit.bind(this);
-    // this.showError    = this.showError.bind(this);
+    this.getUserEvents       = this.getUserEvents.bind(this);
+  }
+  
+  componentDidMount(){
+    this.getUserEvents();
   }
   
   componentDidUpdate(){
@@ -106,6 +98,17 @@ class EventMain extends React.Component {
     this.setState({[name]: value});
   }
   
+  getUserEvents(){
+    axios.get('/api/event')
+      .then((response) => {
+        this.setState({ data : response.data});
+      })
+      .catch((error) => {
+        this.showError(error.response && error.response.data ? error.response.data.error : error);
+        this.setState({processing : false});
+      });
+  }
+  
   submit(e){
     e.preventDefault();
     let event = Object.assign({}, this.state);
@@ -113,13 +116,13 @@ class EventMain extends React.Component {
     delete event.modal;
     delete event.text;
     delete event.email;
+    delete event.data;
     delete event.processing;
     this.setState({processing : true}, () => {
       axios.post('/api/event', event)
         .then((response) => {
-          // window.location.reload();
-          console.log(response)
-          this.setState({processing : false});
+          this.setState({processing : false, modal : false});
+          this.getUserEvents();
         })
         .catch((error) => {
           this.showError(error.response && error.response.data ? error.response.data.error : error);
@@ -129,10 +132,11 @@ class EventMain extends React.Component {
   }
   
   render(){
+    console.log(this.state.virtual)
     return(
       <div>
         <ReactTable
-          data={data}
+          data={this.state.data}
           columns={columns}
           defaultPageSize={20}
           style={{
@@ -149,7 +153,7 @@ class EventMain extends React.Component {
         >
           <div >
             <h2 className="sameLineModal">Create an event</h2>
-            <button className="sameLineModal pull-right" onClick={this.closeModal}>close</button>
+            <button className="sameLineModal pull-right" onClick={()=>this.setState({modal: false})}>close</button>
           </div>
           <form role="form" id="loginForm" onSubmit={this.submit}>
             <div className="form-group">
@@ -164,13 +168,13 @@ class EventMain extends React.Component {
               <label>{'Dates  '+'  '}</label>
               <DateRangePicker
                 required={true}
-                startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-                startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-                endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })} // PropTypes.func.isRequired,
-                focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
+                startDate={this.state.startDate}
+                startDateId="your_unique_start_date_id"
+                endDate={this.state.endDate}
+                endDateId="your_unique_end_date_id"
+                onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })}
+                focusedInput={this.state.focusedInput}
+                onFocusChange={focusedInput => this.setState({ focusedInput })}
               />
             </div>
             <div className="form-group">
@@ -188,24 +192,21 @@ class EventMain extends React.Component {
               <input className="form-control" onChange={(e) => this.setState({place: e.target.value})}
                      value={this.state.place}
                      name="place" type="text" id="placeField"
-                     required
-                     autoFocus/>
+                     required/>
             </div>
             <div className="form-group">
               <label>Address</label>
               <input className="form-control" onChange={(e) => this.setState({address: e.target.value})}
                      value={this.state.address}
                      name="address" type="text" id="addressField"
-                     required
-                     autoFocus/>
+                     required/>
             </div>
             <div className="form-group">
               <label htmlFor="ckField" className="sameLineModal">Is the event virtual?</label>
-              <input className="form-control sameLineModal cb" onChange={(e) => this.setState({email: e.target.value})}
+              <input className="form-control sameLineModal cb"
                      value={this.state.virtual}
                      onChange={this.handleInputChange}
-                     placeholder="Email" name="text" type="checkbox" id="ckField"
-                     autoFocus/>
+                     name="virtual" type="checkbox" id="ckField"/>
             </div>
             
             <button id="signupButton" type="submit"

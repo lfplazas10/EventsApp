@@ -11,7 +11,7 @@ POST    /api/user                       controllers.UserController.createUser()
 POST    /api/login                      controllers.UserController.login()
 
 # Event endpoints
-
+GET     /api/event                      controllers.EventController.getEvents()
 POST    /api/event                      controllers.EventController.createEvent()
 
 GET    /api/test                       controllers.UserController.test()

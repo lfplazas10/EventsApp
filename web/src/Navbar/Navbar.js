@@ -1,13 +1,14 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import './Navbar.css'
+import {isUserLogged} from '../Auth.js'
 
 class Navbar extends React.Component {
 
   constructor(props){
     super(props);
     this.state = {
-      isUserLogged : false
+      isUserLogged : isUserLogged()
     };
   }
 
@@ -29,21 +30,8 @@ class Navbar extends React.Component {
               <ul className="nav navbar-nav navbar-right">
                 {/*Menu options dropdown*/}
                 { this.state.isUserLogged &&
-                <li role="presentation" data-toggle="collapse" data-target=".nav-collapse.show"
-                    className="dropdown">
-                  <a className="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                     aria-haspopup="true" aria-expanded="false">
-                    What do you want to do today?
-                    <span className="caret"></span>
-                  </a>
-                  <ul className="dropdown-menu">
-                    <li className="nav-item" data-toggle="collapse" data-target=".nav-collapse.show">
-                      <a onClick={() => null}>View events</a>
-                    </li>
-                    <li className="nav-item" data-toggle="collapse" data-target=".nav-collapse.show">
-                      <a onClick={() => null}>Create event</a>
-                    </li>
-                  </ul>
+                <li data-toggle="collapse" data-target=".nav-collapse.show">
+                  <Link to='/events'>Events</Link>
                 </li>
                 }
                 { !this.state.isUserLogged &&

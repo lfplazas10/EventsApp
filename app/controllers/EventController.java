@@ -26,7 +26,7 @@ public class EventController extends BaseController {
     public Result getEvents() {
         try {
             String user = session("connected");
-            return ok(Event.find().query().where().eq("email", user));
+            return ok(Event.find().query().where().eq("owner_email", user).findList());
         } catch (Exception e){
             e.printStackTrace();
             return error(e.getMessage());

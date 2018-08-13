@@ -1,0 +1,28 @@
+version: '2.1'
+services:
+  web:
+    command: ["/wait-for-it.sh", "postgresdb:5432"]
+    build: .
+    restart: on-failure
+    ports:
+     - "8080:9000"
+    environment:
+      DATABASE_USER: manager
+      DATABASE_PASSWORD: Hamaca2018
+    depends_on:
+      - 'postgresdb'
+    links:
+      - "postgresdb"
+  postgresdb:
+    image: postgres
+    restart: always
+    ports:
+     - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: Hamaca2018
+      POSTGRES_USER: manager
+    healthcheck:
+      test: "pg_isready -q -U postgres" 
+# networks:
+#   default:
+#     driver: overlay

@@ -20,7 +20,6 @@ class EventDialog extends React.Component{
       processing  : false
     };
     if (!this.state.createMode){
-      console.log(this.props.event)
       this.state.category    = this.props.event.category;
       this.state.name        = this.props.event.name;
       this.state.place       = this.props.event.place;

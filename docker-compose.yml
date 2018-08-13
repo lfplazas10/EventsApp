@@ -21,8 +21,6 @@ services:
     environment:
       POSTGRES_PASSWORD: Hamaca2018
       POSTGRES_USER: manager
-    healthcheck:
-      test: "pg_isready -q -U postgres" 
 # networks:
 #   default:
 #     driver: overlay

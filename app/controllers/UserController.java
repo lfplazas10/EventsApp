@@ -61,5 +61,14 @@ public class UserController extends BaseController {
         }
     }
 
+    public Result logout() {
+        try {
+            response().discardCookie("session");
+            return ok();
+        } catch (Exception e){
+            return error(e.getMessage());
+        }
+    }
+
 }
 

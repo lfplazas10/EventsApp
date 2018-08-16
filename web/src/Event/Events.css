@@ -26,3 +26,6 @@
     width: 100% !important;
     text-align: center!important;
 }
+.ReactModal__Overlay {
+    z-index: 1000;
+}

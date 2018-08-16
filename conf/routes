@@ -9,6 +9,7 @@ GET     /                           controllers.FrontendController.index()
 GET     /api/user                       controllers.UserController.getUser()
 POST    /api/user                       controllers.UserController.createUser()
 POST    /api/login                      controllers.UserController.login()
+POST    /api/logout                     controllers.UserController.logout()
 
 # Event endpoints
 GET     /api/event                      controllers.EventController.getEvents()

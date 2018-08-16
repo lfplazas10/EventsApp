@@ -36,7 +36,7 @@ class Navbar extends React.Component {
                 </li>
                 }
                 { this.state.isUserLogged &&
-                <li data-toggle="collapse" data-target=".nav-collapse.show" onClick={()=>logOutUser()}>
+                <li data-toggle="collapse" data-target=".nav-collapse.show" onClick={()=>{logOutUser();this.setState({ isUserLogged : isUserLogged()})}}>
                   <Link to='/login'>Logout</Link>
                 </li>
                 }

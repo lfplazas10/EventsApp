@@ -33,6 +33,7 @@ class EventDialog extends React.Component{
     this.submit                 = this.submit.bind(this);
     this.edit                   = this.edit.bind(this);
   }
+  
   componentDidMount(){
     this.setState({virtual: this.state.virtual});
   }
@@ -111,6 +112,7 @@ class EventDialog extends React.Component{
         isOpen={this.props.modal}
         onRequestClose={this.props.closeModal}
         style={customStyles}
+        ariaHideApp={false}
         contentLabel="Example Modal"
       >
         <div >
@@ -134,6 +136,7 @@ class EventDialog extends React.Component{
               required={true}
               startDate={this.state.startDate}
               startDateId="your_unique_start_date_id"
+              minimumNights={0}
               endDate={this.state.endDate}
               endDateId="your_unique_end_date_id"
               onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })}

@@ -167,7 +167,7 @@ class EventMain extends React.Component {
           closeModal={() => this.closeEventDialog('createModal')}
           createMode={true}/> }
         {this.state.editEvent && <EventDialog
-          modal={this.state.editEvent}
+          modal={this.state.editEvent != null}
           event={this.state.editEvent}
           getUserEvents={this.getUserEvents}
           closeModal={() => this.closeEventDialog('editEvent')}
